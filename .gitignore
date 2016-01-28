@@ -1,3 +1,8 @@
 
 
+/.gradle
+/build
+
+*.luac
+
 unluac.jar

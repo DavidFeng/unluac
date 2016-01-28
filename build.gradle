@@ -1,0 +1,19 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'unluac.Main'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'unluac.Main'
+    }
+}
+
