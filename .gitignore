@@ -7,3 +7,5 @@
 
 unluac.jar
 /*.lua
+
+*.out
