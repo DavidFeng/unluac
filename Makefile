@@ -1,3 +1,3 @@
 
 all:
-	lua53 main.lua luac.out
+	@lua53 main.lua luac.out
