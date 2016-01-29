@@ -6,3 +6,4 @@
 *.luac
 
 unluac.jar
+/*.lua
