@@ -12,9 +12,9 @@ public class BHeader {
   private static final byte[] signature = {
     0x1B, 0x4C, 0x75, 0x61,
   };
-
-  public final boolean debug = true;
-
+  
+  public final boolean debug = false;
+  
   public final Configuration config;
   public final Version version;
   public final LHeader lheader;
@@ -30,9 +30,9 @@ public class BHeader {
   public final LUpvalueType upvalue;
   public final LFunctionType function;
   public final CodeExtract extractor;
-
+  
   public final LFunction main;
-
+  
   public BHeader(ByteBuffer buffer, Configuration config) {
     this.config = config;
     // 4 byte Lua signature
@@ -76,7 +76,7 @@ public class BHeader {
     upvalue = lheader.upvalue;
     function = lheader.function;
     extractor = lheader.extractor;
-
+    
     int upvalues = -1;
     if(versionNumber >= 0x53) {
       upvalues = 0xFF & buffer.get();
@@ -95,5 +95,5 @@ public class BHeader {
       main.upvalues[0].name = "_ENV";
     }
   }
-
+  
 }

@@ -1,8 +1,8 @@
 package unluac.decompile.expression;
 
-import unluac.decompile.Declaration;
 import unluac.decompile.Decompiler;
 import unluac.decompile.Output;
+import unluac.decompile.Walker;
 import unluac.decompile.target.TableTarget;
 import unluac.decompile.target.Target;
 import unluac.decompile.target.VariableTarget;
@@ -13,15 +13,18 @@ public class ClosureExpression extends Expression {
 
   private final LFunction function;
   private int upvalueLine;
-  private Declaration[] declList;
   
-  public ClosureExpression(LFunction function, Declaration[] declList, int upvalueLine) {
+  public ClosureExpression(LFunction function, int upvalueLine) {
     super(PRECEDENCE_ATOMIC);
     this.function = function;
     this.upvalueLine = upvalueLine;
-    this.declList = declList;
   }
 
+  @Override
+  public void walk(Walker w) {
+    w.visitExpression(this);
+  }
+  
   public int getConstantIndex() {
     return -1;
   }
@@ -97,8 +100,8 @@ public class ClosureExpression extends Expression {
     out.print(")");
     out.println();
     out.indent();
-    d.decompile();
-    d.print(out);
+    Decompiler.State result = d.decompile();
+    d.print(result, out);
     out.dedent();
     out.print("end");
     //out.println(); //This is an extra space for formatting

@@ -3,8 +3,9 @@ package unluac.decompile.statement;
 import java.util.List;
 
 import unluac.decompile.Decompiler;
+import unluac.decompile.Function;
 import unluac.decompile.Output;
-import unluac.decompile.block.IfThenElseBlock;
+import unluac.decompile.Walker;
 
 abstract public class Statement {
 
@@ -25,7 +26,7 @@ abstract public class Statement {
       } else {
         stmt.print(d, out);
       }
-      if(!(stmt instanceof IfThenElseBlock)) {
+      if(!stmt.suppressNewline()) {
         out.println();
       }
     }
@@ -43,7 +44,17 @@ abstract public class Statement {
     this.comment = comment;
   }
   
+  public abstract void walk(Walker w);
+  
   public boolean beginsWithParen() {
+    return false;
+  }
+  
+  public boolean suppressNewline() {
+    return false;
+  }
+  
+  public boolean useConstant(Function f, int index) {
     return false;
   }
   

@@ -44,8 +44,8 @@ public class Main {
         error(e.getMessage(), false);
       }
       Decompiler d = new Decompiler(lmain);
-      d.decompile();
-      d.print();
+      Decompiler.State result = d.decompile();
+      d.print(result);
       System.exit(0);
     }
   }
@@ -61,23 +61,30 @@ public class Main {
   }
   
   private static LFunction file_to_function(String fn, Configuration config) throws IOException {
-    RandomAccessFile file = new RandomAccessFile(fn, "r");
-    ByteBuffer buffer = ByteBuffer.allocate((int) file.length());
-    buffer.order(ByteOrder.LITTLE_ENDIAN);
-    int len = (int) file.length();
-    FileChannel in = file.getChannel();
-    while(len > 0) len -= in.read(buffer);
-    buffer.rewind();
-    BHeader header = new BHeader(buffer, config);
-    return header.main;
+    RandomAccessFile file = null;
+    try {
+      file = new RandomAccessFile(fn, "r");
+      ByteBuffer buffer = ByteBuffer.allocate((int) file.length());
+      buffer.order(ByteOrder.LITTLE_ENDIAN);
+      int len = (int) file.length();
+      FileChannel in = file.getChannel();
+      while(len > 0) len -= in.read(buffer);
+      buffer.rewind();
+      BHeader header = new BHeader(buffer, config);
+      return header.main;
+    } finally {
+      if(file != null) {
+        file.close();
+      }
+    }
   }
   
   public static void decompile(String in, String out) throws IOException {
     LFunction lmain = file_to_function(in, new Configuration());
     Decompiler d = new Decompiler(lmain);
-    d.decompile();
+    Decompiler.State result = d.decompile();
     final PrintStream pout = new PrintStream(out);
-    d.print(new Output(new OutputProvider() {
+    d.print(result, new Output(new OutputProvider() {
 
       @Override
       public void print(String s) {

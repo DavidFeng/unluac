@@ -25,19 +25,17 @@ public abstract class Version {
   
   public abstract int getOuterBlockScopeAdjustment();
 
-  public abstract boolean usesOldLoadNilEncoding();
-  
   public abstract boolean usesInlineUpvalueDeclarations();
   
   public abstract Op getTForTarget();
 
   public abstract Op getForTarget();
   
-  public abstract boolean isBreakableLoopEnd(Op op);
-  
   public abstract boolean isAllowedPreceedingSemicolon();
   
   public abstract boolean isEnvironmentTable(String name);
+  
+  public abstract boolean usesIfBreakRewrite();
   
 }
 
@@ -58,28 +56,18 @@ class Version50 extends Version {
   }
 
   @Override
-  public boolean usesOldLoadNilEncoding() {
-    return true;
-  }
-
-  @Override
   public boolean usesInlineUpvalueDeclarations() {
     return true;
   }
 
   @Override
   public Op getTForTarget() {
-    return Op.TFORLOOP;
+    return null;
   }
 
   @Override
   public Op getForTarget() {
     return Op.FORLOOP;
-  }
-
-  @Override
-  public boolean isBreakableLoopEnd(Op op) {
-    return op == Op.JMP || op == Op.FORLOOP;
   }
 
   @Override
@@ -89,6 +77,11 @@ class Version50 extends Version {
   
   @Override
   public boolean isEnvironmentTable(String upvalue) {
+    return false;
+  }
+  
+  @Override
+  public boolean usesIfBreakRewrite() {
     return false;
   }
   
@@ -111,11 +104,6 @@ class Version51 extends Version {
   }
   
   @Override
-  public boolean usesOldLoadNilEncoding() {
-    return true;
-  }
-  
-  @Override
   public boolean usesInlineUpvalueDeclarations() {
     return true;
   }
@@ -131,17 +119,17 @@ class Version51 extends Version {
   }
 
   @Override
-  public boolean isBreakableLoopEnd(Op op) {
-    return op == Op.JMP || op == Op.FORLOOP;
-  }
-  
-  @Override
   public boolean isAllowedPreceedingSemicolon() {
     return false;
   }
   
   @Override
   public boolean isEnvironmentTable(String upvalue) {
+    return false;
+  }
+  
+  @Override
+  public boolean usesIfBreakRewrite() {
     return false;
   }
   
@@ -164,11 +152,6 @@ class Version52 extends Version {
   }
   
   @Override
-  public boolean usesOldLoadNilEncoding() {
-    return false;
-  }
-  
-  @Override
   public boolean usesInlineUpvalueDeclarations() {
     return false;
   }
@@ -184,11 +167,6 @@ class Version52 extends Version {
   }
 
   @Override
-  public boolean isBreakableLoopEnd(Op op) {
-    return op == Op.JMP || op == Op.FORLOOP || op == Op.TFORLOOP;
-  }
-  
-  @Override
   public boolean isAllowedPreceedingSemicolon() {
     return true;
   }
@@ -196,6 +174,11 @@ class Version52 extends Version {
   @Override
   public boolean isEnvironmentTable(String name) {
     return name.equals("_ENV");
+  }
+  
+  @Override
+  public boolean usesIfBreakRewrite() {
+    return true;
   }
   
 }
@@ -217,11 +200,6 @@ class Version53 extends Version {
   }
   
   @Override
-  public boolean usesOldLoadNilEncoding() {
-    return false;
-  }
-  
-  @Override
   public boolean usesInlineUpvalueDeclarations() {
     return false;
   }
@@ -237,11 +215,6 @@ class Version53 extends Version {
   }
 
   @Override
-  public boolean isBreakableLoopEnd(Op op) {
-    return op == Op.JMP || op == Op.FORLOOP || op == Op.TFORLOOP;
-  }
-  
-  @Override
   public boolean isAllowedPreceedingSemicolon() {
     return true;
   }
@@ -249,6 +222,11 @@ class Version53 extends Version {
   @Override
   public boolean isEnvironmentTable(String name) {
     return name.equals("_ENV");
+  }
+  
+  @Override
+  public boolean usesIfBreakRewrite() {
+    return true;
   }
   
 }
